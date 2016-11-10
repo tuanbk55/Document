@@ -1,0 +1,11 @@
+1. Create a new repository on github web: http://github.com/
+2. Open git command line window at folder, that will store local repository.
+3. Run command lines as below:
+	3.1. Create README.md file to describe for this repository
+	3.2. git init
+	3.3. git add README.md
+	3.4. git commit -m "first commit"
+	3.5. git remote add origin (link of repository on github)
+	3.6. git push -u origin master
+*Note:
+If local repository exist then only need execute 3.5, 3.6 commands.
