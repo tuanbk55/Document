@@ -1,0 +1,3 @@
+
+- Save user name and password when run push command:
+	$git config --global credential.helper wincred
