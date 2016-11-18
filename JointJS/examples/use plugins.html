@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="libs/joint.css" />
+    <script src="libs/jquery-2.2.4.min.js"></script>
+    <script src="libs/lodash.js"></script>
+    <script src="libs/backbone.js"></script>
+    <script src="libs/joint.js"></script>
+</head>
+
+<body>
+	<div>
+		<button id="start-btn">Start</button>
+		<button id="state-btn">State</button>
+		<button id="end-btn">End</button>
+		<button id="link-btn">Link</button>
+		<button id="save-btn">Save</button>
+        <input id="state-name" style="display:none" ></input>
+        <input id="link-name" style="display:none" ></input>
+	</div>
+    <div>
+        <div id="paper" style="width: 50%"></div>
+        <div id="paper-copy" style="width: 50%; position: absolute; right: 0; top: 0; width: 40%;"></div>
+    </div>
+<script type="text/javascript">
+var graph = new joint.dia.Graph;
+var graph_copy = new joint.dia.Graph;
+var current_element = new joint.shapes.fsa.State();
+
+var paper = new joint.dia.Paper({
+    el: $('#paper'),
+    width: 800,
+    height: 600,
+    gridSize: 1,
+    model: graph
+});
+paper.on('cell:pointerclick', function(cellView, evt, x, y){
+    console.log(cellView);
+    current_element = cellView.model;
+    if(current_element.attributes.type === 'fsa.State'){
+        $('#state-name').show();
+        $('#link-name').hide();
+    }else if(current_element.attributes.type === 'fsa.Arrow'){
+        $('#state-name').hide();
+        $('#link-name').show();
+    }
+});
+
+var paper_copy = new joint.dia.Paper({
+    el: $('#paper-copy'),
+    width: 800,
+    height: 600,
+    gridSize: 1,
+    model: graph_copy
+});
+
+function create_state(x, y, label) {
+    
+    var cell = new joint.shapes.fsa.State({
+        position: { x: x, y: y },
+        size: { width: 60, height: 60 },
+        attrs: { text : { text: label }}
+    });
+    cell.on('change', function(element){
+        //console.log(element.id, ':', element.get('position'));
+        console.log('name:'+ element.prop('attrs/text/text'));
+        $('#state-name').val( element.prop('attrs/text/text') );
+        current_element = element;
+    });
+    graph.addCell(cell);
+    return cell;
+};
+
+function create_link(label){
+    var cell = new joint.shapes.fsa.Arrow({
+        source: { x:20, y:200},
+        target: { x:20, y:300},
+        labels: [{ position: .5, attrs: { text: { text: label || '', 'font-weight': 'bold' } } }]
+    });
+    graph.addCell(cell);
+    return cell;
+}
+
+function create_start(){
+    var cell = new joint.shapes.fsa.StartState({ position: { x: 50, y: 200 } });
+    graph.addCell(cell);
+
+    return cell;
+}
+
+function create_end(){
+    var cell = new joint.shapes.fsa.EndState({ position: { x:50, y: 220}});
+    graph.addCell(cell);
+    return cell;
+}
+
+function download(data) {
+    var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
+    window.open(url, '_blank');
+    window.focus();
+}
+
+function save_to_json(){
+    var jsonString = JSON.stringify(graph);
+    
+    graph_copy.fromJSON(JSON.parse(jsonString))
+}
+
+$(document).ready(function(){
+    $('#start-btn').click(function(){
+        create_start();
+    });
+
+    $('#state-btn').on('click', function(){
+        create_state(50, 100, 'state');
+    });
+
+    $('#end-btn').on('click', function(){
+        create_end();
+    });
+
+    $('#link-btn').on('click', function(){
+        create_link('label');
+    });
+
+    $('#save-btn').on('click', function(){
+        save_to_json();
+    });
+
+    $('#state-name').change(function(){
+        current_element.prop('attrs/text/text', $(this).val());
+    });
+
+    $('#link-name').change(function(){
+        current_element.prop('labels/0/attrs/text/text', $(this).val());
+    });
+});
+
+  </script>
+</body>
+
+</html>
