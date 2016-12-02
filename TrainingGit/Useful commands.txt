@@ -4,3 +4,11 @@
 - File status life cycle: https://git-scm.com/figures/18333fig0201-tn.png 
 - Save user name and password when run push command:
 	$git config --global credential.helper wincred
+
+- commands folow:
+	0. git pull		: get data from remote repository data to local repository
+	1. git status		: check status of current local repository
+	2. git add .		: to add new files and modify files before commit
+	   git add [file name]	: to add [file name]
+	3. git commit -m "message"
+	4. git push

@@ -1,2 +1,4 @@
 #ignore /log directory
 /log
+#ignore /JointJS/joint-master
+/JointJS/joint-master

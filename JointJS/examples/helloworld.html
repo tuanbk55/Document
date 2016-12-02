@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="libs/joint.css" />
+    <script src="libs/jquery-2.2.4.min.js"></script>
+    <script src="libs/lodash.js"></script>
+    <script src="libs/backbone.js"></script>
+    <script src="libs/joint.js"></script>
+</head>
+<body>
+  <div id="paper">
+	
+  </div>
+  <script type="text/javascript">
+
+    var graph = new joint.dia.Graph;
+
+    var paper = new joint.dia.Paper({
+        el: $('#paper'),
+        position: {x: 200, y:200},
+        width: 600,
+        height: 200,
+        gridSize: 10,
+        origin: {x: 100, y: 100},
+        drawGrid: { color: 'red', thickness: 1 },
+        model: graph,
+        linkPinning: false
+    });
+
+    var rect = new joint.shapes.basic.Rect({
+        position: { x: 100, y: 30 },
+        size: { width: 100, height: 30 },
+        attrs: { rect: { fill: 'blue' }, text: { text: 'my box', fill: 'white' } }
+    });
+
+    var rect4 = new joint.shapes.basic.Rect({
+        position: {x: 50, y: 50},
+        size: {width: 50, height:50},
+        attrs: {rect: {fill: 'black'}, text: {text: 'angle', fill: 'white'}}
+    });
+    var rect5 = new joint.shapes.basic.Rect({
+        position: {x: 150, y: 150},
+        size: {width: 50, height:50},
+        attrs: {rect: {fill: 'blue', rx: 15, ry: 15, 'stroke-dasharray': '2,5'}, text: {text: 'angle', fill: 'white'}}
+    });
+
+    graph.addCell(rect4);
+    graph.addCell(rect5);
+    var rect2 = rect.clone();
+    rect2.translate(300);
+
+    var rect3 = rect.clone();
+    rect3.translate(300, 60);
+
+    var link = new joint.dia.Link({
+        source: { id: rect.id },
+        target: { id: rect2.id }
+    });
+
+    graph.addCells([rect, rect2, link]);
+    graph.addCell(rect3);
+    rect3.rotate(45,true,{x:400,y:90});
+
+  </script>
+</body>
+</html>

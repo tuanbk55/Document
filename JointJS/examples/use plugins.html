@@ -32,8 +32,9 @@ var paper = new joint.dia.Paper({
     el: $('#paper'),
     width: 800,
     height: 600,
-    gridSize: 1,
-    model: graph
+    model: graph,
+    gridSize: 10,
+    drawGrid: {color: 'red', thickness:1}
 });
 paper.on('cell:pointerclick', function(cellView, evt, x, y){
     console.log(cellView);
@@ -60,7 +61,7 @@ function create_state(x, y, label) {
     var cell = new joint.shapes.fsa.State({
         position: { x: x, y: y },
         size: { width: 60, height: 60 },
-        attrs: { text : { text: label }}
+        attrs: { circle: {'stroke-dasharray': '2,5'}, text : { text: label }}
     });
     cell.on('change', function(element){
         //console.log(element.id, ':', element.get('position'));
@@ -137,6 +138,18 @@ $(document).ready(function(){
     });
 });
 
+var tmpLink = new joint.dia.Link({
+    source: {x: 100, y: 100},
+    target: {x: 400, y: 100}
+});
+tmpLink.addTo(graph);
+tmpLink.attr({
+    '.connection': {stroke: 'blue', 'stroke-dasharray': '5,5'},
+    '.marker-source': {fill: 'red', d: 'M 20 0 L 10 5 L 10 0 L 0 5 L 10 10 L 10 5 L 20 10 z'},
+    '.marker-target': {fill: 'yellow', d: 'M 10 0 L 0 5 L 10 10 z'}
+});
+tmpLink.set('vertices', [{x: 300, y: 60}, {x: 400, y: 60}, {x: 400, y:20}]);
+tmpLink.set('smooth', true);
   </script>
 </body>
 
